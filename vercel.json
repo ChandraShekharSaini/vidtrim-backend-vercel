@@ -9,6 +9,12 @@
   "routes": [
     {
       "src": "/(.*)",
+      "dest": "/app.js"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/(.*)",
       "headers": [
         {
           "key": "Access-Control-Allow-Origin",
@@ -26,8 +32,7 @@
           "key": "Access-Control-Allow-Headers",
           "value": "Content-Type,Authorization"
         }
-      ],
-      "dest": "/app.js"
+      ]
     }
   ]
 }
