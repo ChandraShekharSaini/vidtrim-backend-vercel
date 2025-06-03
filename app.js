@@ -13,11 +13,7 @@ import { rateLimit } from "express-rate-limit";
 const app = express();
 const PORT = process.env.PORT || 3600;
 const __dirname = path.resolve();
-
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-
-app.use(cookieParser());
+;
 app.use(
   cors({
     origin: ["https://frontend-five-gamma-26.vercel.app"],
@@ -26,6 +22,13 @@ app.use(
   })
 );
 
+app.options("*", cors());
+
+
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
 // const limiter = rateLimit({
 //     windowMs: 15 * 60 * 1000,
 //     max: 100,
