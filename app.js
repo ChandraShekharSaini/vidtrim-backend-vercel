@@ -103,12 +103,15 @@ app.get(
 app.get(
   "/auth/google/callback",
   GoogleAuthPassport.authenticate("google", {
-    failureRedirect: "https://frontend-five-gamma-26.vercel.app/account-create/sign-in",
+    failureRedirect:
+      "https://frontend-five-gamma-26.vercel.app/account-create/sign-in",
     session: false,
   }),
   function (req, res) {
     if (!req.user)
-      return res.redirect("https://frontend-five-gamma-26.vercel.app/account-create/sign-in");
+      return res.redirect(
+        "https://frontend-five-gamma-26.vercel.app/account-create/sign-in"
+      );
 
     const token = jwt.sign({ user: req.user }, process.env.JWT_SECRET, {
       expiresIn: "1h",
@@ -144,12 +147,15 @@ app.get(
 app.get(
   "/auth/github/callback",
   GithubAuthPassport.authenticate("github", {
-    failureRedirect: "https://frontend-five-gamma-26.vercel.app/account-create/sign-in",
+    failureRedirect:
+      "https://frontend-five-gamma-26.vercel.app/account-create/sign-in",
     session: false,
   }),
   function (req, res) {
     if (!req.user)
-      return res.redirect("https://frontend-five-gamma-26.vercel.app/account-create/sign-in");
+      return res.redirect(
+        "https://frontend-five-gamma-26.vercel.app/account-create/sign-in"
+      );
     const token = jwt.sign({ user: req.user }, process.env.JWT_SECRET, {
       expiresIn: "1h",
     });
@@ -160,13 +166,15 @@ app.get(
     res.cookie("access_token", token1, {
       httpOnly: true,
       sameSite: "None",
-      path:"/",
+      path: "/",
       secure: true,
     });
     console.log("GitHub", token1);
 
     res.redirect(
-      `https://frontend-five-gamma-26.vercel.app?token=${encodeURIComponent(JSON.stringify(token))}`
+      `https://frontend-five-gamma-26.vercel.app?token=${encodeURIComponent(
+        JSON.stringify(token)
+      )}`
     );
   }
 );
@@ -176,6 +184,14 @@ import compressedVideoRoutes from "./routes/compressed-video.router.js";
 
 app.use("/api/auth", authRoutes);
 app.use("/api/compressed-video", compressedVideoRoutes);
+app.get("/", (req, res, next) => {
+  res.send("Hello Boy!!");
+});
+
+app.get("/app", (req, res, next) => {
+  res.send("Hello Boy!!");
+});
+
 
 app.use((err, req, res, next) => {
   const statusCode = err.statusCode || 500;
@@ -187,8 +203,6 @@ app.use((err, req, res, next) => {
     statusCode,
   });
 });
-
-
 
 app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`);
