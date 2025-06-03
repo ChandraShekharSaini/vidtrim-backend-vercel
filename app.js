@@ -204,8 +204,6 @@ app.use((err, req, res, next) => {
   });
 });
 
-app.listen(PORT, () => {
-  console.log(`Server running at http://localhost:${PORT}`);
 
   mongoose
     .connect(process.env.MONGODB_STRING)
@@ -216,4 +214,9 @@ app.listen(PORT, () => {
       console.log("Error connecting to MongoDB");
       console.log(error);
     });
+
+app.listen(PORT, () => {
+  console.log(`Server running at http://localhost:${PORT}`);
+
+
 });
