@@ -54,6 +54,7 @@ export const postSignIn = async (req, res, next) => {
 
 export const postSignUp = async (req, res, next) => {
   console.log("Signup start....");
+  console.log(req.body);
   try {
     const { firstName, lastName, email } = req.body;
 
