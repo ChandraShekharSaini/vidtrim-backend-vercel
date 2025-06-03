@@ -59,6 +59,8 @@ export const postSignUp = async (req, res, next) => {
 
     const user = await User.findOne({ email });
 
+    console.log("user",user);
+
     if (user) {
       return next(errorHandler(400, "User Already Exists"));
     }
