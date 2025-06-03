@@ -1,1 +1,0 @@
-# vidtrim-backend-vercel
