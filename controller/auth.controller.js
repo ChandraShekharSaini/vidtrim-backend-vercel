@@ -81,7 +81,7 @@ export const postSignUp = async (req, res, next) => {
 
     await newUser.save();
 
-    SignupMailer(email, generatedUsername, generatedPassword);
+  await  SignupMailer(email, generatedUsername, generatedPassword);
     res.status(201).json({
       message: "User Created Successfully!",
     });

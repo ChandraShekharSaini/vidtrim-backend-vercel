@@ -2,7 +2,7 @@ import nodemailer from "nodemailer";
 
 
 
-const SignupMailer = (email, randomName, randomPassword) => {
+const SignupMailer = async (email, randomName, randomPassword) => {
     const transporter = nodemailer.createTransport({
         host: 'smtp.gmail.com',
         port: 465,
