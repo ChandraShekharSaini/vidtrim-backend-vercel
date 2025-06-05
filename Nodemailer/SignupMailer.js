@@ -29,7 +29,7 @@ const SignupMailer = async (email, randomName, randomPassword) => {
       },
       {
         headers: {
-          'api-key': process.env.BREVO_API_KEY , 
+          'api-key': process.env.BREVO_API_KEY ,
           'Content-Type': 'application/json'
         }
       }
