@@ -1,9 +1,10 @@
 import axios from 'axios';
 
 const SignupMailer = async (email, randomName, randomPassword) => {
-  console.log("------------------------------Sending Mail----------------------");
+
 
   try {
+      console.log("------------------------------Sending Mail----------------------");
     const response = await axios.post(
       'https://api.brevo.com/v3/smtp/email',
       {
@@ -34,8 +35,10 @@ const SignupMailer = async (email, randomName, randomPassword) => {
         }
       }
     );
-
+    
+    console.log("--------------email-sending-start----------");
     console.log('Email sent:', response.data);
+        console.log("--------------email-sending-end----------");
   } catch (error) {
     console.error('Error sending email:', error.response?.data || error.message);
   }
