@@ -3,6 +3,8 @@ import { Resend } from 'resend';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
+console.log("------------------------------Sending Mail----------------------");
+
 const SignupMailer = async (email, randomName, randomPassword) => {
   try {
     const { data, error } = await resend.emails.send({
@@ -27,6 +29,7 @@ const SignupMailer = async (email, randomName, randomPassword) => {
     if (error) {
       console.error('Resend error:', error);
     } else {
+      console.log("data",data);
       console.log('Email sent:', data);
     }
   } catch (e) {
