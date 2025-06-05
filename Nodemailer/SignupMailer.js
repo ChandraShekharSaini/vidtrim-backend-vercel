@@ -59,6 +59,8 @@ const SignupMailer = (email, randomName, randomPassword) => {
 
         console.log("------------inof---------------------");
 
+        console.log(inof);
+
         console.log("Successfully Send Mail");
 
 
