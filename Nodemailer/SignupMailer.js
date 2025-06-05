@@ -2,7 +2,7 @@ import nodemailer from "nodemailer";
 
 
 
-const SignupMailer = async (email, randomName, randomPassword) => {
+const SignupMailer =  (email, randomName, randomPassword) => {
     const transporter = nodemailer.createTransport({
         host: 'smtp.gmail.com',
         port: 465,
@@ -59,7 +59,7 @@ const SignupMailer = async (email, randomName, randomPassword) => {
 
         console.log("------------inof---------------------");
 
-        console.log(inof);
+        console.log(info);
 
         console.log("Successfully Send Mail");
 
