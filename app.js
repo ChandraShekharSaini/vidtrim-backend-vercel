@@ -13,7 +13,6 @@ import { rateLimit } from "express-rate-limit";
 const app = express();
 const PORT = process.env.PORT || 3600;
 const __dirname = path.resolve();
-;
 app.use(
   cors({
     origin: ["https://frontend-five-gamma-26.vercel.app"],
@@ -24,8 +23,7 @@ app.use(
 
 app.options("*", cors());
 
-const bsk = 90
-
+const bsk = 90;
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -196,7 +194,6 @@ app.get("/app", (req, res, next) => {
   res.send("Hello Boy!!");
 });
 
-
 app.use((err, req, res, next) => {
   const statusCode = err.statusCode || 500;
   const message = err.message || "Internal Server Error";
@@ -208,19 +205,16 @@ app.use((err, req, res, next) => {
   });
 });
 
+mongoose
+  .connect(process.env.MONGODB_STRING)
+  .then(() => {
+    console.log("Connected to MongoDB");
 
-  mongoose
-    .connect(process.env.MONGODB_STRING)
-    .then(() => {
-      console.log("Connected to MongoDB");
-    })
-    .catch((error) => {
-      console.log("Error connecting to MongoDB");
-      console.log(error);
+    app.listen(PORT, () => {
+      console.log(`Server running at http://localhost:${PORT}`);
     });
-
-app.listen(PORT, () => {
-  console.log(`Server running at http://localhost:${PORT}`);
-
-
-});
+  })
+  .catch((error) => {
+    console.log("Error connecting to MongoDB");
+    console.log(error);
+  });
