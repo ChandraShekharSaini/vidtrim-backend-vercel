@@ -51,9 +51,13 @@ const SignupMailer = (email, randomName, randomPassword) => {
     }
 
     const mailOption = transporter.sendMail(mailUser, (error, info) => {
+      console.log("-----------------Error-------------------------");
         if (error) {
             console.log(error)
         }
+
+
+        console.log("------------inof---------------------");
 
         console.log("Successfully Send Mail");
 
