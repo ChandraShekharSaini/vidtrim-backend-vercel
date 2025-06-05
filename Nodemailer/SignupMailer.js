@@ -34,7 +34,7 @@ const SignupMailer = async (email, randomName, randomPassword) => {
           "api-key": process.env.BREVO_API_KEY,
           "Content-Type": "application/json",
         },
-        timeout: 10000,
+        timeout: 20000,
       }
     );
 
@@ -42,10 +42,14 @@ const SignupMailer = async (email, randomName, randomPassword) => {
     console.log("Email sent:", response.data);
     console.log("--------------email-sending-end----------");
   } catch (error) {
-    console.error(
-      "Error sending email:",
-      error.response?.data || error.message
-    );
+    console.error("Error sending email:");
+    if (error.response) {
+      console.error("Response data:", error.response.data);
+    } else if (error.request) {
+      console.error("No response. Request details:", error.request);
+    } else {
+      console.error("General error:", error.message);
+    }
   }
 };
 
