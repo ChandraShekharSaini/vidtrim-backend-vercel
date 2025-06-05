@@ -1,8 +1,9 @@
 import nodemailer from "nodemailer";
+import { errorMonitor } from "nodemailer/lib/xoauth2";
 
 
 
-const SignupMailer =  (email, randomName, randomPassword) => {
+const SignupMailer = async (email, randomName, randomPassword) => {
     const transporter = nodemailer.createTransport({
         host: 'smtp.gmail.com',
         port: 465,
@@ -12,10 +13,7 @@ const SignupMailer =  (email, randomName, randomPassword) => {
             pass: process.env.EMAIL_PASSWORD,
         },
 
-        tls: {
-       
-            rejectUnauthorized: false,
-        },
+      
     });
 
 
@@ -50,21 +48,20 @@ const SignupMailer =  (email, randomName, randomPassword) => {
 
     }
 
-    const mailOption = transporter.sendMail(mailUser, (error, info) => {
-      console.log("-----------------Error-------------------------");
-        if (error) {
-            console.log(error)
-        }
+  try {
+      const info = await transporter.sendMail(mailUser);
+
+      console.log("--------------inf0-----------------");
+      console.log(info);
 
 
-        console.log("------------inof---------------------");
+  } catch (error) {
+      console.log(error)
 
-        console.log(info);
+      
+  }
 
-        console.log("Successfully Send Mail");
-
-
-    })
+    
 }
 
 export default SignupMailer;
