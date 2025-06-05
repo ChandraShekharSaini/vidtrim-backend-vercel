@@ -1,8 +1,8 @@
 import nodemailer from "nodemailer";
-import { errorMonitor } from "nodemailer/lib/xoauth2";
 
 
 
+const n =90
 const SignupMailer = async (email, randomName, randomPassword) => {
     const transporter = nodemailer.createTransport({
         host: 'smtp.gmail.com',
@@ -13,7 +13,6 @@ const SignupMailer = async (email, randomName, randomPassword) => {
             pass: process.env.EMAIL_PASSWORD,
         },
 
-      
     });
 
 
