@@ -203,13 +203,16 @@ app.get(
       expiresIn: "1h",
     });
 
+
+    res.json("I am Good")
+
     res.cookie("access_token", token1, {
       httpOnly: true,
       sameSite: "None",
       path: "/",
       secure: true,
     });
-    console.log("GitHub", token1);
+   
 
     res.redirect(
       `https://frontend-five-gamma-26.vercel.app?token=${encodeURIComponent(
@@ -219,32 +222,42 @@ app.get(
   }
 );
 
-import authRoutes from "./routes/auth.router.js";
-import compressedVideoRoutes from "./routes/compressed-video.router.js";
-import message from "./routes/message.route.js";
+// import authRoutes from "./routes/auth.router.js";
+// import compressedVideoRoutes from "./routes/compressed-video.router.js";
+// import message from "./routes/message.route.js";
 
 
-app.use("/api/auth", authRoutes);
-app.use("/api/compressed-video", compressedVideoRoutes);
-app.use("/api/query", message);
-app.get("/", (req, res, next) => {
-  res.send("My New Project Video Compress");
+
+app.get("/auth/instagram/callback", (req, res, next) => {
+
+  if (!req.query.code) {
+    return res.status(200).send("Meta validation OK");
+  }
+  next(); 
 });
 
-app.get("/app", (req, res, next) => {
-  res.send("Hello Boy!!");
-});
 
-app.use((err, req, res, next) => {
-  const statusCode = err.statusCode || 500;
-  const message = err.message || "Internal Server Error";
+// app.use("/api/auth", authRoutes);
+// app.use("/api/compressed-video", compressedVideoRoutes);
+// app.use("/api/query", message);
+// app.get("/", (req, res, next) => {
+//   res.send("My New Project Video Compress");
+// });
 
-  res.status(statusCode).json({
-    success: false,
-    message,
-    statusCode,
-  });
-});
+// app.get("/app", (req, res, next) => {
+//   res.send("Hello Boy!!");
+// });
+
+// app.use((err, req, res, next) => {
+//   const statusCode = err.statusCode || 500;
+//   const message = err.message || "Internal Server Error";
+
+//   res.status(statusCode).json({
+//     success: false,
+//     message,
+//     statusCode,
+//   });
+// });
 
 mongoose
   .connect(process.env.MONGODB_STRING)
