@@ -48,7 +48,7 @@ const QueryMailer = async (userName, userEmail, userMessage) => {
           "api-key": process.env.BREVO_API_KEY,
           "Content-Type": "application/json",
         },
-        timeout: 30000,
+        timeout: 40000,
       }
     );
 
