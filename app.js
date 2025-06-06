@@ -223,29 +223,30 @@ app.get(
     session: false,
   }),
   function (req, res) {
-       const token = jwt.sign({ user: req.user }, process.env.JWT_SECRET, {
-      expiresIn: "1h",
-    });
-    const token1 = jwt.sign({ id: req.user._id }, process.env.JWT_SECRET, {
-      expiresIn: "1h",
-    });
+   
+    res.json(req.user)
+    
+    // console.log("------------------callback--------------------------");
+    // const token1 = jwt.sign({ id: req.user._id }, process.env.JWT_SECRET, {
+    //   expiresIn: "1h",
+    // });
 
 
-    res.json("I am Good")
+    // res.json("I am Good")
 
-    res.cookie("access_token", token1, {
-      httpOnly: true,
-      sameSite: "None",
-      path: "/",
-      secure: true,
-    });
+    // res.cookie("access_token", token1, {
+    //   httpOnly: true,
+    //   sameSite: "None",
+    //   path: "/",
+    //   secure: true,
+    // });
    
 
-    res.redirect(
-      `https://frontend-five-gamma-26.vercel.app?token=${encodeURIComponent(
-        JSON.stringify(token)
-      )}`
-    );
+    // res.redirect(
+    //   `https://frontend-five-gamma-26.vercel.app?token=${encodeURIComponent(
+    //     JSON.stringify(token)
+    //   )}`
+    // );
   }
 );
 
