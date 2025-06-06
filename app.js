@@ -188,76 +188,76 @@ app.use(InstagramAuthPassport.initialize())
 
 app.get("/auth/instagram",  InstagramAuthPassport.authenticate("instagram"));
 
-app.get(
-  "/auth/instagram/callback",
-       InstagramAuthPassport.authenticate("instagram", {
-    failureRedirect:
-      "https://frontend-five-gamma-26.vercel.app/account-create/sign-in",
-    session: false,
-  }),
-  function (req, res) {
-       const token = jwt.sign({ user: req.user }, process.env.JWT_SECRET, {
-      expiresIn: "1h",
-    });
-    const token1 = jwt.sign({ id: req.user._id }, process.env.JWT_SECRET, {
-      expiresIn: "1h",
-    });
-
-
-    res.json("I am Good")
-
-    res.cookie("access_token", token1, {
-      httpOnly: true,
-      sameSite: "None",
-      path: "/",
-      secure: true,
-    });
-   
-
-    res.redirect(
-      `https://frontend-five-gamma-26.vercel.app?token=${encodeURIComponent(
-        JSON.stringify(token)
-      )}`
-    );
-  }
-);
-
-// import authRoutes from "./routes/auth.router.js";
-// import compressedVideoRoutes from "./routes/compressed-video.router.js";
-// import message from "./routes/message.route.js";
-
-
 
 app.get("/auth/instagram/callback", (req, res, next) => {
-
+  // Meta verification test
   if (!req.query.code) {
     return res.status(200).send("Meta validation OK");
   }
-  next(); 
+  next(); // Continue to Passport middleware if ?code is present
 });
 
 
-// app.use("/api/auth", authRoutes);
-// app.use("/api/compressed-video", compressedVideoRoutes);
-// app.use("/api/query", message);
-// app.get("/", (req, res, next) => {
-//   res.send("My New Project Video Compress");
-// });
+// app.get(
+//   "/auth/instagram/callback",
+//        InstagramAuthPassport.authenticate("instagram", {
+//     failureRedirect:
+//       "https://frontend-five-gamma-26.vercel.app/account-create/sign-in",
+//     session: false,
+//   }),
+//   function (req, res) {
+//        const token = jwt.sign({ user: req.user }, process.env.JWT_SECRET, {
+//       expiresIn: "1h",
+//     });
+//     const token1 = jwt.sign({ id: req.user._id }, process.env.JWT_SECRET, {
+//       expiresIn: "1h",
+//     });
 
-// app.get("/app", (req, res, next) => {
-//   res.send("Hello Boy!!");
-// });
 
-// app.use((err, req, res, next) => {
-//   const statusCode = err.statusCode || 500;
-//   const message = err.message || "Internal Server Error";
+//     res.json("I am Good")
 
-//   res.status(statusCode).json({
-//     success: false,
-//     message,
-//     statusCode,
-//   });
-// });
+//     res.cookie("access_token", token1, {
+//       httpOnly: true,
+//       sameSite: "None",
+//       path: "/",
+//       secure: true,
+//     });
+   
+
+//     res.redirect(
+//       `https://frontend-five-gamma-26.vercel.app?token=${encodeURIComponent(
+//         JSON.stringify(token)
+//       )}`
+//     );
+//   }
+// );
+
+import authRoutes from "./routes/auth.router.js";
+import compressedVideoRoutes from "./routes/compressed-video.router.js";
+import message from "./routes/message.route.js";
+
+
+app.use("/api/auth", authRoutes);
+app.use("/api/compressed-video", compressedVideoRoutes);
+app.use("/api/query", message);
+app.get("/", (req, res, next) => {
+  res.send("My New Project Video Compress");
+});
+
+app.get("/app", (req, res, next) => {
+  res.send("Hello Boy!!");
+});
+
+app.use((err, req, res, next) => {
+  const statusCode = err.statusCode || 500;
+  const message = err.message || "Internal Server Error";
+
+  res.status(statusCode).json({
+    success: false,
+    message,
+    statusCode,
+  });
+});
 
 mongoose
   .connect(process.env.MONGODB_STRING)
