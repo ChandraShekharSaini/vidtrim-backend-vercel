@@ -2,7 +2,7 @@ import QuerMailer from "../Nodemailer/QueryMailer.js";
 import ResponseToUser from "../Nodemailer/ResponseToUser.js";
 
 export const queryMessage = async (req, res, next) => {
-  console.log(req.body.userEmail);
+  console.log(req.body);
   const { userName, userEmail, userMessage } = req.body;
 
   try {
