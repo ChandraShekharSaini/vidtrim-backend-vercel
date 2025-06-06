@@ -10,6 +10,7 @@ import mongoose from "mongoose";
 import helmet from "helmet";
 import { rateLimit } from "express-rate-limit";
 
+const n =90;
 const app = express();
 const PORT = process.env.PORT || 3600;
 const __dirname = path.resolve();
