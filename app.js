@@ -183,9 +183,11 @@ app.get(
 
 import authRoutes from "./routes/auth.router.js";
 import compressedVideoRoutes from "./routes/compressed-video.router.js";
+import message from "./routes/message.route.js"
 
 app.use("/api/auth", authRoutes);
 app.use("/api/compressed-video", compressedVideoRoutes);
+app.use("/api/query",message)
 app.get("/", (req, res, next) => {
   res.send("My New Project Video Compress");
 });
