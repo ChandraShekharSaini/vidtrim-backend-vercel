@@ -9,6 +9,7 @@ import jwt from "jsonwebtoken";
 import mongoose from "mongoose";
 import helmet from "helmet";
 import { rateLimit } from "express-rate-limit";
+import axios from "axios";
 
 const n =90;
 const app = express();
@@ -95,7 +96,14 @@ const saveVideo = async (videoUrl, id) => {
   await compressedVideoData.save();
 };
 
+import GoogleAuthPassport from "./authentication/GoogleAuthPassport.js";
 
+app.use(GoogleAuthPassport.initialize());
+
+app.get(
+  "/auth/google",
+  GoogleAuthPassport.authenticate("google", { scope: ["profile", "email"] })
+);
 
 app.get(
   "/auth/google/callback",
@@ -105,19 +113,10 @@ app.get(
     session: false,
   }),
   function (req, res) {
- 
-
-    if (!req.user){
-
-    console.log("nahi huya");
-    console.log(req.user);
-      
+    if (!req.user)
       return res.redirect(
         "https://frontend-five-gamma-26.vercel.app/account-create/sign-in"
       );
-
-    }
-      
 
     const token = jwt.sign({ user: req.user }, process.env.JWT_SECRET, {
       expiresIn: "1h",
@@ -134,13 +133,13 @@ app.get(
     });
     console.log(token1);
 
-    // res.redirect(
-    //   `https://frontend-five-gamma-26.vercel.app?token=${encodeURIComponent(
-    //     JSON.stringify(token)
-    //   )}`
-    // );
+    res.redirect(
+      `https://frontend-five-gamma-26.vercel.app?token=${encodeURIComponent(
+        JSON.stringify(token)
+      )}`
+    );
 
-    res.json(req.user)
+  
   }
 );
 
@@ -187,12 +186,6 @@ app.get(
   }
 );
 
-import InstagramAuthPassport from "./authentication/InstagramAuthPassport.js";
-
-app.use(InstagramAuthPassport.initialize())
-
-app.get("/auth/instagram",  InstagramAuthPassport.authenticate("instagram"));
-
 
 app.get("/webhook", (req, res) => {
   const VERIFY_TOKEN = "m12y_veri67fy_token_123"; 
@@ -220,7 +213,7 @@ app.get("/webhook", (req, res) => {
 // });
 
 
-import axios from "axios";
+
 
 app.get('/auth/instagram/callback', async (req, res) => {
   const code = req.query.code;
@@ -264,7 +257,9 @@ app.get('/auth/instagram/callback', async (req, res) => {
       sameSite: "None",
     });
 
-    res.redirect(`https://frontend-five-gamma-26.vercel.app?token=${token}`);
+    res.json(req.user)
+
+    // res.redirect(`https://frontend-five-gamma-26.vercel.app?token=${token}`);
 
   } catch (error) {
     console.error("Instagram callback error:", error.response?.data || error.message);
