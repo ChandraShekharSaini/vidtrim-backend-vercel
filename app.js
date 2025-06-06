@@ -190,7 +190,7 @@ app.get("/auth/instagram",  InstagramAuthPassport.authenticate("instagram"));
 
 
 app.get("/webhook", (req, res) => {
-  const VERIFY_TOKEN = "my_verify^^token123"; // you set this
+  const VERIFY_TOKEN = "m12y_veri67fy_token_123"; 
 
   const mode = req.query["hub.mode"];
   const token = req.query["hub.verify_token"];
