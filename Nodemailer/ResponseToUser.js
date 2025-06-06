@@ -54,7 +54,7 @@ const ResponseToUser = async ( userEmail, userName) => {
           "api-key": process.env.BREVO_API_KEY,
           "Content-Type": "application/json",
         },
-        timeout: 40000,
+        timeout: 60000,
       }
     );
 
