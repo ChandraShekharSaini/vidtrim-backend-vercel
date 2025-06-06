@@ -95,14 +95,7 @@ const saveVideo = async (videoUrl, id) => {
   await compressedVideoData.save();
 };
 
-import GoogleAuthPassport from "./authentication/GoogleAuthPassport.js";
 
-app.use(GoogleAuthPassport.initialize());
-
-app.get(
-  "/auth/google",
-  GoogleAuthPassport.authenticate("google", { scope: ["profile", "email"] })
-);
 
 app.get(
   "/auth/google/callback",
@@ -112,10 +105,19 @@ app.get(
     session: false,
   }),
   function (req, res) {
-    if (!req.user)
+ 
+
+    if (!req.user){
+
+    console.log("nahi huya");
+    console.log(req.user);
+      
       return res.redirect(
         "https://frontend-five-gamma-26.vercel.app/account-create/sign-in"
       );
+
+    }
+      
 
     const token = jwt.sign({ user: req.user }, process.env.JWT_SECRET, {
       expiresIn: "1h",
@@ -132,11 +134,13 @@ app.get(
     });
     console.log(token1);
 
-    res.redirect(
-      `https://frontend-five-gamma-26.vercel.app?token=${encodeURIComponent(
-        JSON.stringify(token)
-      )}`
-    );
+    // res.redirect(
+    //   `https://frontend-five-gamma-26.vercel.app?token=${encodeURIComponent(
+    //     JSON.stringify(token)
+    //   )}`
+    // );
+
+    res.json(req.user)
   }
 );
 
