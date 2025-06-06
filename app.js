@@ -215,40 +215,93 @@ app.get("/webhook", (req, res) => {
 // });
 
 
-app.get(
-  "/auth/instagram/callback",
-       InstagramAuthPassport.authenticate("instagram", {
-    failureRedirect:
-      "https://frontend-five-gamma-26.vercel.app/account-create/sign-in",
-    session: false,
-  }),
-  function (req, res) {
+import axios from "axios";
+
+app.get('/auth/instagram/callback', async (req, res) => {
+  const code = req.query.code;
+
+  if (!code) {
+    return res.status(400).json({ success: false, message: "No code provided" });
+  }
+
+  try {
+    // Step 1: Exchange code for access token
+    const tokenResponse = await axios.post('https://api.instagram.com/oauth/access_token', new URLSearchParams({
+      client_id: process.env.INSTAGRAM_CLIENT_ID,
+      client_secret: process.env.INSTAGRAM_CLIENT_SECRET,
+      grant_type: 'authorization_code',
+      redirect_uri: process.env.INSTAGRAM_REDIRECT_URI,
+      code: code,
+    }).toString(), {
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      }
+    });
+
+    const accessToken = tokenResponse.data.access_token;
+    const userId = tokenResponse.data.user_id;
+
+    // Step 2: Use access token to get user info (for example)
+    const userResponse = await axios.get(`https://graph.instagram.com/${userId}?fields=id,username,account_type&access_token=${accessToken}`);
+
+    // Step 3: Create or update your user in DB here
+    // const user = await User.findOrCreate({ instagramId: userResponse.data.id }, ...);
+
+    // Step 4: Create your own JWT token or session for this user
+    const token = jwt.sign({ instagramId: userResponse.data.id, username: userResponse.data.username }, process.env.JWT_SECRET, {
+      expiresIn: '1h',
+    });
+
+    // Step 5: Set cookie or redirect with token
+    res.cookie("access_token", token, {
+      httpOnly: true,
+      secure: true,
+      sameSite: "None",
+    });
+
+    res.redirect(`https://frontend-five-gamma-26.vercel.app?token=${token}`);
+
+  } catch (error) {
+    console.error("Instagram callback error:", error.response?.data || error.message);
+    res.status(500).json({ success: false, message: "Failed to fetch user profile", error: error.response?.data || error.message });
+  }
+});
+
+
+// app.get(
+//   "/auth/instagram/callback",
+//        InstagramAuthPassport.authenticate("instagram", {
+//     failureRedirect:
+//       "https://frontend-five-gamma-26.vercel.app/account-create/sign-in",
+//     session: false,
+//   }),
+//   function (req, res) {
    
  
     
-    console.log("------------------callback--------------------------");
-    res.json(req.user)
-    // const token1 = jwt.sign({ id: req.user._id }, process.env.JWT_SECRET, {
-    //   expiresIn: "1h",
-    // });
+//     console.log("------------------callback--------------------------");
+//     res.json(req.user)
+//     // const token1 = jwt.sign({ id: req.user._id }, process.env.JWT_SECRET, {
+//     //   expiresIn: "1h",
+//     // });
 
-    // res.cookie("access_token", token1, {
-    //   httpOnly: true,
-    //   sameSite: "None",
-    //   path: "/",
-    //   secure: true,
-    // });
+//     // res.cookie("access_token", token1, {
+//     //   httpOnly: true,
+//     //   sameSite: "None",
+//     //   path: "/",
+//     //   secure: true,
+//     // });
    
 
-    // res.redirect(
-    //   `https://frontend-five-gamma-26.vercel.app?token=${encodeURIComponent(
-    //     JSON.stringify(token)
-    //   )}`
-    // );
+//     // res.redirect(
+//     //   `https://frontend-five-gamma-26.vercel.app?token=${encodeURIComponent(
+//     //     JSON.stringify(token)
+//     //   )}`
+//     // );
 
 
-  }
-);
+//   }
+// );
 
 import authRoutes from "./routes/auth.router.js";
 import compressedVideoRoutes from "./routes/compressed-video.router.js";
