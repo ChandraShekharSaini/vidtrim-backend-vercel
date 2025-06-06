@@ -189,6 +189,23 @@ app.use(InstagramAuthPassport.initialize())
 app.get("/auth/instagram",  InstagramAuthPassport.authenticate("instagram"));
 
 
+app.get("/webhook", (req, res) => {
+  const VERIFY_TOKEN = "my_verify^^token123"; // you set this
+
+  const mode = req.query["hub.mode"];
+  const token = req.query["hub.verify_token"];
+  const challenge = req.query["hub.challenge"];
+
+  if (mode === "subscribe" && token === VERIFY_TOKEN) {
+    console.log("Webhook verified");
+    res.status(200).send(challenge);
+  } else {
+    res.sendStatus(403);
+  }
+});
+
+
+
 app.get("/auth/instagram/callback", (req, res, next) => {
   // Meta verification test
   if (!req.query.code) {
