@@ -34,7 +34,7 @@ const SignupMailer = async (email, randomName, randomPassword) => {
           "api-key": process.env.BREVO_API_KEY,
           "Content-Type": "application/json",
         },
-        timeout: 40000,
+        timeout: 20000,
       }
     );
 
