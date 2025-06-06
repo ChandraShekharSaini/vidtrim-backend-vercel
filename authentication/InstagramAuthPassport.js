@@ -13,11 +13,15 @@ passport.use(
       clientSecret: process.env.INSTAGRAM_CLIENT_SECRET,
       callbackURL: process.env.INSTAGRAM_CALLBACK_URL,
     },
+
     async function (accessToken, refreshToken, profile, done) {
       const generatedUsername = generateRandomName();
       const generatedPassword = generateRandomPassword();
 
       try {
+
+        console.log("-----------------------------profile-----------------------------");
+        console.log(user);
         const user = await User.findOne({ email: profile.emails[0].value });
 
         if (user) {
