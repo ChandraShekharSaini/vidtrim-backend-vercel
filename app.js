@@ -15,15 +15,16 @@ const PORT = process.env.PORT || 3600;
 const __dirname = path.resolve();
 app.use(
   cors({
-    origin: ["https://frontend-five-gamma-26.vercel.app","http://localhost:5173"],
+    origin: [
+      "https://frontend-five-gamma-26.vercel.app",
+      "http://localhost:5173",
+    ],
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   })
 );
 
 app.options("*", cors());
-
-const bsk = 9107702;
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -181,13 +182,51 @@ app.get(
   }
 );
 
+import InstagramAuthPassport from "./authentication/InstagramAuthPassport.js";
+
+app.use(InstagramAuthPassport.initialize())
+
+app.get("/auth/instagram",  InstagramAuthPassport.authenticate("instagram"));
+
+app.get(
+  "/auth/instagram/callback",
+       InstagramAuthPassport.authenticate("instagram", {
+    failureRedirect:
+      "https://frontend-five-gamma-26.vercel.app/account-create/sign-in",
+    session: false,
+  }),
+  function (req, res) {
+       const token = jwt.sign({ user: req.user }, process.env.JWT_SECRET, {
+      expiresIn: "1h",
+    });
+    const token1 = jwt.sign({ id: req.user._id }, process.env.JWT_SECRET, {
+      expiresIn: "1h",
+    });
+
+    res.cookie("access_token", token1, {
+      httpOnly: true,
+      sameSite: "None",
+      path: "/",
+      secure: true,
+    });
+    console.log("GitHub", token1);
+
+    res.redirect(
+      `https://frontend-five-gamma-26.vercel.app?token=${encodeURIComponent(
+        JSON.stringify(token)
+      )}`
+    );
+  }
+);
+
 import authRoutes from "./routes/auth.router.js";
 import compressedVideoRoutes from "./routes/compressed-video.router.js";
-import message from "./routes/message.route.js"
+import message from "./routes/message.route.js";
+
 
 app.use("/api/auth", authRoutes);
 app.use("/api/compressed-video", compressedVideoRoutes);
-app.use("/api/query",message)
+app.use("/api/query", message);
 app.get("/", (req, res, next) => {
   res.send("My New Project Video Compress");
 });
