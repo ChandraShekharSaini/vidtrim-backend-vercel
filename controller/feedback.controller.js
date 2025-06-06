@@ -6,7 +6,7 @@ export const queryMessage = async (req, res, next) => {
   const { userName, userEmail, userMessage } = req.body;
 
   try {
-    QuerMailer(userName, userEmail, userMessage);
+   await QuerMailer(userName, userEmail, userMessage);
 
 
     res.json({

@@ -48,14 +48,14 @@ const QueryMailer = async (userName, userEmail, userMessage) => {
           "api-key": process.env.BREVO_API_KEY,
           "Content-Type": "application/json",
         },
-        timeout: 60000,
+        timeout: 30000,
       }
     );
 
     console.log("--------------email-sending-start----------");
     console.log("Email sent:", response.data);
 
-    ResponseToUser(userEmail, userName);
+ await   ResponseToUser(userEmail, userName);
     console.log("--------------email-sending-end----------");
   } catch (error) {
     console.error("Error sending email:");
