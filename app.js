@@ -224,15 +224,13 @@ app.get(
   }),
   function (req, res) {
    
-    res.json(req.user)
+ 
     
-    // console.log("------------------callback--------------------------");
+    console.log("------------------callback--------------------------");
+    res.json(req.user)
     // const token1 = jwt.sign({ id: req.user._id }, process.env.JWT_SECRET, {
     //   expiresIn: "1h",
     // });
-
-
-    // res.json("I am Good")
 
     // res.cookie("access_token", token1, {
     //   httpOnly: true,
@@ -247,6 +245,8 @@ app.get(
     //     JSON.stringify(token)
     //   )}`
     // );
+
+
   }
 );
 
