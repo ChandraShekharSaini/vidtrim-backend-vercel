@@ -9,9 +9,10 @@ import jwt from "jsonwebtoken";
 import mongoose from "mongoose";
 import helmet from "helmet";
 import { rateLimit } from "express-rate-limit";
+import session from "express-session";
 import axios from "axios";
 
-const n =90;
+const n = 90;
 const app = express();
 const PORT = process.env.PORT || 3600;
 const __dirname = path.resolve();
@@ -96,6 +97,19 @@ const saveVideo = async (videoUrl, id) => {
   await compressedVideoData.save();
 };
 
+
+app.post("/saved-video/:id", async (req,res,next)=>{
+
+  const {videoUrl} =req.body
+  const id = req.params.id
+
+ await saveVideo(videoUrl , id)
+
+  res.json({
+    message: "Video compressed and uploaded successfully!",
+  })
+})
+
 import GoogleAuthPassport from "./authentication/GoogleAuthPassport.js";
 
 app.use(GoogleAuthPassport.initialize());
@@ -138,8 +152,6 @@ app.get(
         JSON.stringify(token)
       )}`
     );
-
-  
   }
 );
 
@@ -186,9 +198,8 @@ app.get(
   }
 );
 
-
 app.get("/webhook", (req, res) => {
-  const VERIFY_TOKEN = "m12y_veri67fy_token_123"; 
+  const VERIFY_TOKEN = "m12y_veri67fy_token_123";
 
   const mode = req.query["hub.mode"];
   const token = req.query["hub.verify_token"];
@@ -202,8 +213,6 @@ app.get("/webhook", (req, res) => {
   }
 });
 
-
-
 // app.get("/auth/instagram/callback", (req, res, next) => {
 //   // Meta verification test
 //   if (!req.query.code) {
@@ -212,43 +221,55 @@ app.get("/webhook", (req, res) => {
 //   next(); // Continue to Passport middleware if ?code is present
 // });
 
-
-
-
-app.get('/auth/instagram/callback', async (req, res) => {
+app.get("/auth/instagram/callback", async (req, res) => {
   const code = req.query.code;
 
   if (!code) {
-    return res.status(400).json({ success: false, message: "No code provided" });
+    return res
+      .status(400)
+      .json({ success: false, message: "No code provided" });
   }
 
   try {
     // Step 1: Exchange code for access token
-    const tokenResponse = await axios.post('https://api.instagram.com/oauth/access_token', new URLSearchParams({
-      client_id: process.env.INSTAGRAM_CLIENT_ID,
-      client_secret: process.env.INSTAGRAM_CLIENT_SECRET,
-      grant_type: 'authorization_code',
-      redirect_uri: process.env.INSTAGRAM_REDIRECT_URI,
-      code: code,
-    }).toString(), {
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded'
+    const tokenResponse = await axios.post(
+      "https://api.instagram.com/oauth/access_token",
+      new URLSearchParams({
+        client_id: process.env.INSTAGRAM_CLIENT_ID,
+        client_secret: process.env.INSTAGRAM_CLIENT_SECRET,
+        grant_type: "authorization_code",
+        redirect_uri: process.env.INSTAGRAM_REDIRECT_URI,
+        code: code,
+      }).toString(),
+      {
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
       }
-    });
+    );
 
     const accessToken = tokenResponse.data.access_token;
     const userId = tokenResponse.data.user_id;
 
     // Step 2: Use access token to get user info (for example)
-    const userResponse = await axios.get(`https://graph.instagram.com/${userId}?fields=id,username,account_type&access_token=${accessToken}`);
+    const userResponse = await axios.get(
+      `https://graph.instagram.com/${userId}?fields=id,username,account_type&access_token=${accessToken}`
+    );
 
     // Step 3: Create or update your user in DB here
     // const user = await User.findOrCreate({ instagramId: userResponse.data.id }, ...);
 
     // Step 4: Create your own JWT token or session for this user
-    const token = jwt.sign({ instagramId: userResponse.data.id, username: userResponse.data.username }, process.env.JWT_SECRET, {
-      expiresIn: '1h',
-    });
+    const token = jwt.sign(
+      {
+        instagramId: userResponse.data.id,
+        username: userResponse.data.username,
+      },
+      process.env.JWT_SECRET,
+      {
+        expiresIn: "1h",
+      }
+    );
 
     // Step 5: Set cookie or redirect with token
     res.cookie("access_token", token, {
@@ -257,16 +278,21 @@ app.get('/auth/instagram/callback', async (req, res) => {
       sameSite: "None",
     });
 
-    res.json(req.user)
+    res.json(req.user);
 
     // res.redirect(`https://frontend-five-gamma-26.vercel.app?token=${token}`);
-
   } catch (error) {
-    console.error("Instagram callback error:", error.response?.data || error.message);
-    res.status(500).json({ success: false, message: "Failed to fetch user profile", error: error.response?.data || error.message });
+    console.error(
+      "Instagram callback error:",
+      error.response?.data || error.message
+    );
+    res.status(500).json({
+      success: false,
+      message: "Failed to fetch user profile",
+      error: error.response?.data || error.message,
+    });
   }
 });
-
 
 // app.get(
 //   "/auth/instagram/callback",
@@ -276,9 +302,7 @@ app.get('/auth/instagram/callback', async (req, res) => {
 //     session: false,
 //   }),
 //   function (req, res) {
-   
- 
-    
+
 //     console.log("------------------callback--------------------------");
 //     res.json(req.user)
 //     // const token1 = jwt.sign({ id: req.user._id }, process.env.JWT_SECRET, {
@@ -291,7 +315,6 @@ app.get('/auth/instagram/callback', async (req, res) => {
 //     //   path: "/",
 //     //   secure: true,
 //     // });
-   
 
 //     // res.redirect(
 //     //   `https://frontend-five-gamma-26.vercel.app?token=${encodeURIComponent(
@@ -299,14 +322,45 @@ app.get('/auth/instagram/callback', async (req, res) => {
 //     //   )}`
 //     // );
 
-
 //   }
 // );
+
+
+import LinkedInAuthPassport from "./authentication/LinkedInAuthPassport.js"; // Use correct name
+
+
+
+app.use(session({ secret: "iiiy4545", resave: false, saveUninitialized: true }));
+app.use(LinkedInAuthPassport.initialize());
+app.use(LinkedInAuthPassport.session());
+
+// LinkedIn auth initiation
+app.get(
+  "/auth/linkedin",
+  LinkedInAuthPassport.authenticate("linkedin", {
+    scope: ["r_liteprofile"],
+    state: true
+  }),
+  function(req,res){
+    console.log(req.user);
+  }
+);
+
+// Callback handler
+app.get(
+  "/auth/linkedin/callback",
+  LinkedInAuthPassport.authenticate("linkedin", {
+    successRedirect: "/",
+    failureRedirect: "/login",
+
+  })
+);
+
+
 
 import authRoutes from "./routes/auth.router.js";
 import compressedVideoRoutes from "./routes/compressed-video.router.js";
 import message from "./routes/message.route.js";
-
 
 app.use("/api/auth", authRoutes);
 app.use("/api/compressed-video", compressedVideoRoutes);
@@ -343,3 +397,7 @@ mongoose
     console.log("Error connecting to MongoDB");
     console.log(error);
   });
+
+// app.listen(PORT, () => {
+//   console.log(`Server running at http://localhost:${PORT}`);
+// });
