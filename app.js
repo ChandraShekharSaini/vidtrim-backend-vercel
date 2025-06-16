@@ -107,6 +107,7 @@ app.post("/saved-video/:id", async (req,res,next)=>{
 
   res.json({
     message: "Video compressed and uploaded successfully!",
+    status:"saved"
   })
 })
 
