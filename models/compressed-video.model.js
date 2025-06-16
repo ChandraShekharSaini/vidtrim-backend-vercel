@@ -2,7 +2,7 @@ import mongoose, { Schema } from "mongoose";
 
 const compressedVideoSchema = new Schema({
 
-    id: { type:Number, required: true },
+    id: { type:String, required: true },
     videoUrl: { type: String, required: true },
 
 }, { timestamps: true })

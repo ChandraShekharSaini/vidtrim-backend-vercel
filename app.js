@@ -75,7 +75,7 @@ app.post("/upload", upload.single("video"), async (req, res) => {
             process.env.JWT_SECRET
           );
 
-          saveVideo(result.secure_url, req.query.id);
+          // saveVideo(result.secure_url, req.query.id);
 
           res.status(200).json({
             message: "Video compressed and uploaded successfully!",
@@ -102,7 +102,7 @@ app.post("/saved-video/:id", async (req,res,next)=>{
 
   const {videoUrl} =req.body
   const id = req.params.id
-
+  
  await saveVideo(videoUrl , id)
 
   res.json({
@@ -110,6 +110,10 @@ app.post("/saved-video/:id", async (req,res,next)=>{
     status:"saved"
   })
 })
+
+
+
+
 
 import GoogleAuthPassport from "./authentication/GoogleAuthPassport.js";
 
