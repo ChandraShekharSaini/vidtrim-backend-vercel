@@ -12,7 +12,7 @@ import { rateLimit } from "express-rate-limit";
 import session from "express-session";
 import axios from "axios";
 
-const n = 90;
+const nlnkj = 90000;
 const app = express();
 const PORT = process.env.PORT || 3600;
 const __dirname = path.resolve();
