@@ -326,35 +326,35 @@ app.get("/auth/instagram/callback", async (req, res) => {
 // );
 
 
-import LinkedInAuthPassport from "./authentication/LinkedInAuthPassport.js"; // Use correct name
+// import LinkedInAuthPassport from "./authentication/LinkedInAuthPassport.js"; // Use correct name
 
 
 
-app.use(session({ secret: "iiiy4545", resave: false, saveUninitialized: true }));
-app.use(LinkedInAuthPassport.initialize());
-app.use(LinkedInAuthPassport.session());
+// app.use(session({ secret: "iiiy4545", resave: false, saveUninitialized: true }));
+// app.use(LinkedInAuthPassport.initialize());
+// app.use(LinkedInAuthPassport.session());
 
-// LinkedIn auth initiation
-app.get(
-  "/auth/linkedin",
-  LinkedInAuthPassport.authenticate("linkedin", {
-    scope: ["r_liteprofile"],
-    state: true
-  }),
-  function(req,res){
-    console.log(req.user);
-  }
-);
+// // LinkedIn auth initiation
+// app.get(
+//   "/auth/linkedin",
+//   LinkedInAuthPassport.authenticate("linkedin", {
+//     scope: ["r_liteprofile"],
+//     state: true
+//   }),
+//   function(req,res){
+//     console.log(req.user);
+//   }
+// );
 
-// Callback handler
-app.get(
-  "/auth/linkedin/callback",
-  LinkedInAuthPassport.authenticate("linkedin", {
-    successRedirect: "/",
-    failureRedirect: "/login",
+// // Callback handler
+// app.get(
+//   "/auth/linkedin/callback",
+//   LinkedInAuthPassport.authenticate("linkedin", {
+//     successRedirect: "/",
+//     failureRedirect: "/login",
 
-  })
-);
+//   })
+// );
 
 
 
