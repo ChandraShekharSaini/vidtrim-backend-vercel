@@ -138,7 +138,7 @@ app.get(
       );
 
     const token = jwt.sign({ user: req.user }, process.env.JWT_SECRET, {
-      expiresIn: "1h",
+      expiresIn: "1d",
     });
     const token1 = jwt.sign({ id: req.user._id }, process.env.JWT_SECRET, {
       expiresIn: "1h",
@@ -181,10 +181,10 @@ app.get(
         "https://frontend-five-gamma-26.vercel.app/account-create/sign-in"
       );
     const token = jwt.sign({ user: req.user }, process.env.JWT_SECRET, {
-      expiresIn: "1h",
+      expiresIn: "1d",
     });
     const token1 = jwt.sign({ id: req.user._id }, process.env.JWT_SECRET, {
-      expiresIn: "1h",
+      expiresIn: "1d",
     });
 
     res.cookie("access_token", token1, {

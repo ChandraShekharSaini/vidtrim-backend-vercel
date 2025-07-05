@@ -37,7 +37,7 @@ export const postSignIn = async (req, res, next) => {
     res
       .cookie("access_token", token, {
         httpOnly: true,
-        maxAge: 5 * 60 * 60 * 1000,
+        maxAge: 24 * 60 * 60 * 1000,
         path: "/",
         sameSite: "None",
         secure:true
@@ -115,7 +115,6 @@ export const deleteUser = async (req, res, next) => {
   console.log("----------User Delete Start---------");
 
   
-
   if (req.user.id === req.params.id) {
     try {
       const { id } = req.params;
