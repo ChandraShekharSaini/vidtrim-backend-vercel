@@ -12,7 +12,7 @@ import { rateLimit } from "express-rate-limit";
 import session from "express-session";
 import axios from "axios";
 
-const nlnkj = 90000;
+
 const app = express();
 const PORT = process.env.PORT || 3600;
 const __dirname = path.resolve();
@@ -98,18 +98,32 @@ const saveVideo = async (videoUrl, id) => {
 };
 
 
-app.post("/saved-video/:id", async (req,res,next)=>{
 
-  const {videoUrl} =req.body
-  const id = req.params.id
+app.post("/saved-video/:id", async (req, res, next) => {
+  const { videoUrl } = req.body; 
+  const id = req.params.id;
   
- await saveVideo(videoUrl , id)
 
-  res.json({
-    message: "Video compressed and uploaded successfully!",
-    status:"saved"
-  })
-})
+  try {
+    
+    const decoded = jwt.verify(videoUrl, process.env.JWT_SECRET );
+
+    if (!decoded || !decoded.Url) {
+      return res.status(400).json({ message: "Invalid video token" });
+    }
+
+    const actualVideoUrl = decoded.Url;
+
+    await saveVideo(actualVideoUrl, id);
+
+    res.json({
+      message: "Video compressed and uploaded successfully!",
+      status: "saved",
+    });
+  } catch (error) {
+    return res.status(401).json({ message: "Unauthorized or expired token" });
+  }
+});
 
 
 
