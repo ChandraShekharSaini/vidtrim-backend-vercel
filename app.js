@@ -1,4 +1,4 @@
-import express, { urlencoded } from "express";
+import express from "express";
 import multer from "multer";
 import { v2 as cloudinary } from "cloudinary";
 import streamifier from "streamifier";
@@ -124,9 +124,6 @@ app.post("/saved-video/:id", async (req, res, next) => {
     return res.status(401).json({ message: "Unauthorized or expired token" });
   }
 });
-
-
-
 
 
 import GoogleAuthPassport from "./authentication/GoogleAuthPassport.js";
@@ -377,8 +374,8 @@ app.get("/auth/instagram/callback", async (req, res) => {
 
 
 
-import authRoutes from "./routes/auth.router.js";
-import compressedVideoRoutes from "./routes/compressed-video.router.js";
+import authRoutes from "./routes/auth.route.js";
+import compressedVideoRoutes from "./routes/compressed-video.route.js";
 import message from "./routes/message.route.js";
 
 app.use("/api/auth", authRoutes);
