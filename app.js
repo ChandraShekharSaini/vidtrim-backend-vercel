@@ -27,7 +27,10 @@ app.use(
   })
 );
 
-app.options("*", cors());
+app.options("*", cors({
+  origin: "https://frontend-five-gamma-26.vercel.app",
+  credentials: true,
+}));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -145,7 +148,7 @@ app.get(
   function (req, res) {
     if (!req.user)
       return res.redirect(
-        "https://frontend-five-gamma-26.vercel.app/account-create/sign-in"
+        "http://localhost:5173/account-create/sign-in"
       );
 
     const token = jwt.sign({ user: req.user }, process.env.JWT_SECRET, {
@@ -164,7 +167,7 @@ app.get(
     console.log(token1);
 
     res.redirect(
-      `https://frontend-five-gamma-26.vercel.app?token=${encodeURIComponent(
+      `http://localhost:5173?token=${encodeURIComponent(
         JSON.stringify(token)
       )}`
     );

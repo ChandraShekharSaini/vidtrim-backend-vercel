@@ -10,7 +10,7 @@ import {
 import SignupMailer from "../Nodemailer/SignupMailer.js";
 
 export const postSignIn = async (req, res, next) => {
-  console.log("Signin Start...");
+  console.log("-----------User-Signin-Start------------");
 
   try {
     const { email, password } = req.body;
@@ -32,6 +32,8 @@ export const postSignIn = async (req, res, next) => {
       expiresIn: "5h",
     });
 
+    console.log("Login Token", token);
+
     const { password: pass, ...rest } = user._doc;
 
     res
@@ -39,8 +41,8 @@ export const postSignIn = async (req, res, next) => {
         httpOnly: true,
         maxAge: 24 * 60 * 60 * 1000,
         path: "/",
-        sameSite: "None",
-        secure:true
+        secure: true,
+       sameSite: "None",
       })
       .status(200)
       .json({
@@ -53,14 +55,14 @@ export const postSignIn = async (req, res, next) => {
 };
 
 export const postSignUp = async (req, res, next) => {
-  console.log("Signup start....");
+  console.log("----------User-Signup-Start----------");
   console.log(req.body);
   try {
     const { firstName, lastName, email } = req.body;
 
     const user = await User.findOne({ email });
 
-    console.log("user",user);
+    console.log("user", user);
 
     if (user) {
       return next(errorHandler(400, "User Already Exists"));
@@ -81,7 +83,7 @@ export const postSignUp = async (req, res, next) => {
 
     await newUser.save();
 
- await SignupMailer(email, generatedUsername, generatedPassword);
+    await SignupMailer(email, generatedUsername, generatedPassword);
     res.status(201).json({
       message: "User Created Successfully!",
     });
@@ -114,7 +116,6 @@ export const getSignOut = (req, res, next) => {
 export const deleteUser = async (req, res, next) => {
   console.log("----------User Delete Start---------");
 
-  
   if (req.user.id === req.params.id) {
     try {
       const { id } = req.params;
