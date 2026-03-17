@@ -148,7 +148,7 @@ app.get(
   function (req, res) {
     if (!req.user)
       return res.redirect(
-        "http://localhost:5173/account-create/sign-in"
+        "https://frontend-five-gamma-26.vercel.app/account-create/sign-in"
       );
 
     const token = jwt.sign({ user: req.user }, process.env.JWT_SECRET, {
