@@ -167,7 +167,7 @@ app.get(
     console.log(token1);
 
     res.redirect(
-      `http://localhost:5173?token=${encodeURIComponent(
+      `https://frontend-five-gamma-26.vercel.app?token=${encodeURIComponent(
         JSON.stringify(token)
       )}`
     );
