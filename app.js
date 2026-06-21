@@ -12,7 +12,6 @@ import { rateLimit } from "express-rate-limit";
 import session from "express-session";
 import axios from "axios";
 
-
 const app = express();
 const PORT = process.env.PORT || 3600;
 const __dirname = path.resolve();
@@ -22,19 +21,28 @@ app.use(
       "https://frontend-five-gamma-26.vercel.app",
       "http://localhost:5173",
       "http://spring-load-132329030.us-east-1.elb.amazonaws.com",
-      "https://chandra.buzz"
+      "https://chandra.buzz",
     ],
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-  })
+  }),
 );
 
-app.options("*", cors({
-  origin: "https://frontend-five-gamma-26.vercel.app",
-  credentials: true,
-}));
+app.options(
+  "*",
+  cors({
+    origin: [
+      "https://frontend-five-gamma-26.vercel.app",
+      "http://localhost:5173",
+      "http://spring-load-132329030.us-east-1.elb.amazonaws.com",
+      "https://chandra.buzz",
+    ],
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  }),
+);
 
-const name = "chandra"
+const name = "chandra";
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -79,7 +87,7 @@ app.post("/upload", upload.single("video"), async (req, res) => {
 
           const token = jwt.sign(
             { Url: result.secure_url },
-            process.env.JWT_SECRET
+            process.env.JWT_SECRET,
           );
 
           // saveVideo(result.secure_url, req.query.id);
@@ -89,7 +97,7 @@ app.post("/upload", upload.single("video"), async (req, res) => {
             compressedVideoUrl: token,
           });
         }
-      }
+      },
     );
     streamifier.createReadStream(req.file.buffer).pipe(result);
   } catch (error) {
@@ -104,16 +112,13 @@ const saveVideo = async (videoUrl, id) => {
   await compressedVideoData.save();
 };
 
-
-
 app.post("/saved-video/:id", async (req, res, next) => {
-  const { videoUrl } = req.body; 
+  const { videoUrl } = req.body;
   const id = req.params.id;
-  
 
   try {
-    const nam = 23
-    const decoded = jwt.verify(videoUrl, process.env.JWT_SECRET );
+    const nam = 23;
+    const decoded = jwt.verify(videoUrl, process.env.JWT_SECRET);
 
     if (!decoded || !decoded.Url) {
       return res.status(400).json({ message: "Invalid video token" });
@@ -132,14 +137,13 @@ app.post("/saved-video/:id", async (req, res, next) => {
   }
 });
 
-
 import GoogleAuthPassport from "./authentication/GoogleAuthPassport.js";
 
 app.use(GoogleAuthPassport.initialize());
 
 app.get(
   "/auth/google",
-  GoogleAuthPassport.authenticate("google", { scope: ["profile", "email"] })
+  GoogleAuthPassport.authenticate("google", { scope: ["profile", "email"] }),
 );
 
 app.get(
@@ -152,7 +156,7 @@ app.get(
   function (req, res) {
     if (!req.user)
       return res.redirect(
-        "https://frontend-five-gamma-26.vercel.app/account-create/sign-in"
+        "https://frontend-five-gamma-26.vercel.app/account-create/sign-in",
       );
 
     const token = jwt.sign({ user: req.user }, process.env.JWT_SECRET, {
@@ -172,10 +176,10 @@ app.get(
 
     res.redirect(
       `https://frontend-five-gamma-26.vercel.app?token=${encodeURIComponent(
-        JSON.stringify(token)
-      )}`
+        JSON.stringify(token),
+      )}`,
     );
-  }
+  },
 );
 
 import GithubAuthPassport from "./authentication/GithubAuthPassport.js";
@@ -183,7 +187,7 @@ app.use(GithubAuthPassport.initialize());
 
 app.get(
   "/auth/github",
-  GithubAuthPassport.authenticate("github", { scope: ["user:email"] })
+  GithubAuthPassport.authenticate("github", { scope: ["user:email"] }),
 );
 
 app.get(
@@ -196,7 +200,7 @@ app.get(
   function (req, res) {
     if (!req.user)
       return res.redirect(
-        "https://frontend-five-gamma-26.vercel.app/account-create/sign-in"
+        "https://frontend-five-gamma-26.vercel.app/account-create/sign-in",
       );
     const token = jwt.sign({ user: req.user }, process.env.JWT_SECRET, {
       expiresIn: "1d",
@@ -215,10 +219,10 @@ app.get(
 
     res.redirect(
       `https://frontend-five-gamma-26.vercel.app?token=${encodeURIComponent(
-        JSON.stringify(token)
-      )}`
+        JSON.stringify(token),
+      )}`,
     );
-  }
+  },
 );
 
 app.get("/webhook", (req, res) => {
@@ -268,7 +272,7 @@ app.get("/auth/instagram/callback", async (req, res) => {
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
         },
-      }
+      },
     );
 
     const accessToken = tokenResponse.data.access_token;
@@ -276,7 +280,7 @@ app.get("/auth/instagram/callback", async (req, res) => {
 
     // Step 2: Use access token to get user info (for example)
     const userResponse = await axios.get(
-      `https://graph.instagram.com/${userId}?fields=id,username,account_type&access_token=${accessToken}`
+      `https://graph.instagram.com/${userId}?fields=id,username,account_type&access_token=${accessToken}`,
     );
 
     // Step 3: Create or update your user in DB here
@@ -291,7 +295,7 @@ app.get("/auth/instagram/callback", async (req, res) => {
       process.env.JWT_SECRET,
       {
         expiresIn: "1h",
-      }
+      },
     );
 
     // Step 5: Set cookie or redirect with token
@@ -307,7 +311,7 @@ app.get("/auth/instagram/callback", async (req, res) => {
   } catch (error) {
     console.error(
       "Instagram callback error:",
-      error.response?.data || error.message
+      error.response?.data || error.message,
     );
     res.status(500).json({
       success: false,
@@ -348,10 +352,7 @@ app.get("/auth/instagram/callback", async (req, res) => {
 //   }
 // );
 
-
 // import LinkedInAuthPassport from "./authentication/LinkedInAuthPassport.js"; // Use correct name
-
-
 
 // app.use(session({ secret: "iiiy4545", resave: false, saveUninitialized: true }));
 // app.use(LinkedInAuthPassport.initialize());
@@ -378,8 +379,6 @@ app.get("/auth/instagram/callback", async (req, res) => {
 
 //   })
 // );
-
-
 
 import authRoutes from "./routes/auth.route.js";
 import compressedVideoRoutes from "./routes/compressed-video.route.js";
