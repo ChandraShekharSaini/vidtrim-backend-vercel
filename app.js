@@ -15,33 +15,20 @@ import axios from "axios";
 const app = express();
 const PORT = process.env.PORT || 3600;
 const __dirname = path.resolve();
-app.use(
-  cors({
+const corsOptions = {
     origin: [
-      "https://frontend-five-gamma-26.vercel.app",
-      "http://localhost:5173",
-      "http://spring-load-132329030.us-east-1.elb.amazonaws.com",
-      "https://chandra.buzz",
+        "http://localhost:5173",
+        "https://frontend-five-gamma-26.vercel.app",
+        "https://chandra.buzz",
+        "https://www.chandra.buzz",
+        "http://spring-load-132329030.us-east-1.elb.amazonaws.com"
     ],
     credentials: true,
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-  }),
-);
+    methods: ["GET","POST","PUT","DELETE","OPTIONS"],
+    allowedHeaders: ["Content-Type","Authorization"]
+};
 
-app.options(
-  "*",
-  cors({
-    origin: [
-      "https://frontend-five-gamma-26.vercel.app",
-      "http://localhost:5173",
-      "http://spring-load-132329030.us-east-1.elb.amazonaws.com",
-      "https://chandra.buzz",
-    ],
-    credentials: true,
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-  }),
-);
-
+app.use(cors(corsOptions));
 const name = "chandra";
 
 app.use(express.json());
