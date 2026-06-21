@@ -34,6 +34,8 @@ app.options("*", cors({
   credentials: true,
 }));
 
+const name = "chandra"
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
