@@ -21,6 +21,7 @@ app.use(
     origin: [
       "https://frontend-five-gamma-26.vercel.app",
       "http://localhost:5173",
+      "https://spring-load-132329030.us-east-1.elb.amazonaws.com"
     ],
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
